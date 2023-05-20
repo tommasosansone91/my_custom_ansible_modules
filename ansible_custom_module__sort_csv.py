@@ -1,26 +1,9 @@
 #!/usr/bin/python
 
-# THIS WORKS FINE
-# yet it could be possible to make the module read columns_names from the csv given in input, without passing the variable as input
-
-    # - name: order the columns of prova.csv
-    #   ansible_custom_module__sort_csv: 
-    #     path: "{{ data_base_path }}/prova.csv"
-    #     columns_names: "{{ [ 'negozio', 'cassa', 'codice_pagamento', 'pagamento', 'ammontare' ] }}"
-    #     columns_to_order_by: "{{ [ 'negozio', 'cassa', 'codice_pagamento' ] }}"
-      
-    #   register: csv_content
-    #   run_once: yes
-    
-    
-
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from ansible.module_utils.basic import AnsibleModule
-
-# specific for csv and sorting 
-import csv, operator
 
 
 def run_module():
@@ -31,11 +14,10 @@ def run_module():
         # path of the csv file to sort
         path = dict(type='str', required=True),
 
-        # list with the titles of all the columns of the csv
-        columns_names = dict(type='list', required=True),
-
         # list with the titles the columns of the csv you want it ordered them by
         columns_to_order_by = dict(type='list', required=True),
+
+        delimiter = dict(type='str', required=True),
         
     )
 
@@ -65,12 +47,17 @@ def run_module():
     # python is calledon the target machine
     #---------------------------------------
 
+    # specific for csv and sorting 
+    import csv, operator
+
     csv_file_path = module.params['path']
 
-    fieldnames = module.params['columns_names']
-    # fieldnames = ['idm', 'idc', 'giorno', 'orario']
+    columns_to_order_by = module.params['columns_to_order_by'] 
+    # columns_to_order_by = ['idm', 'idc']
 
-    items = tuple ( module.params['columns_to_order_by'] )  
+    mydelimiter =  module.params['delimiter'] 
+
+    
 
     # display the columns titles in the tuple in the order you want them to be sorted.
     # items = (
@@ -80,15 +67,31 @@ def run_module():
     #     'idc'
     # )
 
+    items = tuple ( columns_to_order_by ) 
+
     with open(csv_file_path, 'r') as csvfile:
-        spamreader = csv.DictReader(csvfile, delimiter=";")
+        spamreader = csv.DictReader(csvfile, delimiter=mydelimiter)
         sortedlist = sorted(spamreader, key=operator.itemgetter(*items), reverse=False)
+
+    # just get the columns names, then close the file
+    with open(csv_file_path, 'r') as csvfile:
+        columnslist = csv.DictReader(csvfile, delimiter=mydelimiter)      
+        list_of_column_names = []
+        # loop to iterate through the rows of csv
+        for row in columnslist:
+            # adding the first row
+            list_of_column_names.append(row)
+            # breaking the loop after the
+            # first iteration itself
+            break            
+        list_of_column_names = list_of_column_names[0]        
+        list_of_column_names = list(list_of_column_names.keys())
 
     # the same csv gets overwritten
 
     with open(csv_file_path, 'w') as f:
         # titles of the new csv that gets generated with the sorted data coming from the previous one        
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter=";")  # my excel reads ; as column separator for CSVs
+        writer = csv.DictWriter(f, fieldnames=list_of_column_names, delimiter=mydelimiter)  # my excel reads ; as column separator for CSVs
         writer.writeheader()
         for row in sortedlist:
             writer.writerow(row)
