@@ -62,35 +62,35 @@ def run_module():
     appending_hasHeader = module.params['header']
 
 
-try:
-	with open(path_csv_updating, 'r') as reader:
-		row_count_before = sum(1 for row in reader)
+    try:
+        with open(path_csv_updating, 'r') as reader:
+            row_count_before = sum(1 for row in reader)
 
-	with open(path_csv_appending, 'r') as reader, open(path_csv_updating, 'a') as writer:
-		# print(reader)
+        with open(path_csv_appending, 'r') as reader, open(path_csv_updating, 'a') as writer:
+            # print(reader)
 
-        if appending_hasHeader:
-            # The line will skip the first row of the csv file (Header row)
-            next(reader)
+            if appending_hasHeader:
+                # The line will skip the first row of the csv file (Header row)
+                next(reader)
 
 
-		for row in reader:
-			writer.write(row)
-			print(row)
+            for row in reader:
+                writer.write(row)
+                print(row)
 
-	with open(path_csv_updating, 'r') as reader:
-		row_count_after = sum(1 for row in reader)        
+        with open(path_csv_updating, 'r') as reader:
+            row_count_after = sum(1 for row in reader)        
 
-	if row_count_before < row_count_after:
-		result['changed'] = True
-		# print("changed!")
-	else:
-		print("Please note: No changes have been made after appending {} to {}. \n{} rows before vs {} rows after.".format(path_csv_appending, path_csv_updating, row_count_before, row_count_after))
+        if row_count_before < row_count_after:
+            result['changed'] = True
+            # print("changed!")
+        else:
+            print("Please note: No changes have been made after appending {} to {}. \n{} rows before vs {} rows after.".format(path_csv_appending, path_csv_updating, row_count_before, row_count_after))
 
-except Exception as e:
-	print('Exception occurred while trying to append {} to {}\n{}'.format(path_csv_appending, path_csv_updating, e))
+    except Exception as e:
+        print('Exception occurred while trying to append {} to {}\n{}'.format(path_csv_appending, path_csv_updating, e))
 
-    module.exit_json(**result)
+        module.exit_json(**result)
 
 def main():
     run_module()
