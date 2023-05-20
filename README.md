@@ -2,9 +2,15 @@
 Public repo to share my custom ansible modules
 
 
-sort csv
-is ok but can be improved. 
+## ansible_custom_module__sort_csv.py
+is ok. 
 
-delete rows form csv 
-has a bug and must be fixed.
+## ansible_custom_module__delete_rows_from_csv.py
+has a bug and must be fixed. maybe is related to the delimiter
+
+## ansible_custom_module__append_csv.py
+works fine
+
+## ansible_custom_module__append_multiple_csv.py
+works fine
 
