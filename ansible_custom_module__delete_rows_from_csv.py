@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# THIS HAS SOME BUGS
+# vim ~/var/NTTDATA/4store/ansible-am/playbooks/count_enginedisconnected/library/ansible_custom_module__delete_rows_from_csv.py
 
 
 
@@ -37,6 +37,8 @@ def run_module():
 
         # list with the titles of the columns appearing in the python condition
         columns_involved_in_condition = dict(type='list', required=True),
+
+        mydelimiter =  dict(type='str', required=True),
         
     )
 
@@ -69,6 +71,8 @@ def run_module():
     python_condition = module.params['python_condition'] 
 
     columns_involved_in_condition = module.params['columns_involved_in_condition'] 
+
+    mydelimiter =  module.params['delimiter'] 
     
 
     # input processing
@@ -90,7 +94,7 @@ def run_module():
 
     # just get the columns names, then close the file
     with open(csv_input_file_path, 'r') as csvfile:
-        columnslist = csv.DictReader(csvfile, delimiter=";")      
+        columnslist = csv.DictReader(csvfile, delimiter=mydelimiter)      
         list_of_column_names = []
         # loop to iterate through the rows of csv
         for row in columnslist:
@@ -106,8 +110,8 @@ def run_module():
     # read csv content
     with open(csv_input_file_path,"r+") as r, open(csv_output_file_path,"w", newline='') as f:  # newline is only to avoid line brak between rows on windows (testing)
     # pass the file object to reader() to get the reader object
-        reader = csv.reader(r, delimiter=";")
-        writer = csv.writer(f, delimiter=";")
+        reader = csv.reader(r, delimiter=mydelimiter)
+        writer = csv.writer(f, delimiter=mydelimiter)
         # Iterate over each row in the csv using reader object
 
         #---------
@@ -144,7 +148,7 @@ def run_module():
             try:
 
                 if eval(variablefilled_python_condition):    
-                        # if   row[0] == '06-06-2022' and <= '08-06-2022'    :   
+                        # if   row[0] == '06-06-2022' and row[1] == 'Food'    :   
                         # if   day >= '06-06-2022' and day <= '08-06-2022'    :  
                                     
                         result["rows_deleted"]+=1
