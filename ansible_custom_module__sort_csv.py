@@ -18,12 +18,17 @@ def run_module():
         columns_to_order_by = dict(type='list', required=True),
 
         delimiter = dict(type='str', required=True),
+
+        # the csv must have the first line as header
         
     )
 
     # this is the output of the playbook for each host
     result = dict(
         changed=False,
+        warning_messages=[],
+        source_csv_number_of_raw_lines=None,
+        source_csv_number_of_lines=None,
         # found_lines='',
         # found=False
     )
@@ -47,9 +52,6 @@ def run_module():
     # python is calledon the target machine
     #---------------------------------------
 
-    # specific for csv and sorting 
-    import csv, operator
-
     csv_file_path = module.params['path']
 
     columns_to_order_by = module.params['columns_to_order_by'] 
@@ -57,7 +59,11 @@ def run_module():
 
     mydelimiter =  module.params['delimiter'] 
 
-    
+
+    # specific for csv and sorting 
+    import csv, io
+    import operator
+    import os, traceback
 
     # display the columns titles in the tuple in the order you want them to be sorted.
     # items = (
@@ -67,37 +73,84 @@ def run_module():
     #     'idc'
     # )
 
-    items = tuple ( columns_to_order_by ) 
 
+    # check file existence
+    if not os.path.isfile(csv_file_path):
+        raise IOError("csv_file_path is not valid or does not exists: {}".format(csv_file_path))
+
+    # check the delimiter existence
     with open(csv_file_path, 'r') as csvfile:
-        spamreader = csv.DictReader(csvfile, delimiter=mydelimiter)
-        sortedlist = sorted(spamreader, key=operator.itemgetter(*items), reverse=False)
+        first_line = csvfile.readline()
+        # print("first_line", first_line)
+        if mydelimiter not in first_line:
+            delimiter_warning_message = "No delimiter found in file first line."
+            result['warning_messages'].append(delimiter_warning_message)
 
-    # just get the columns names, then close the file
-    with open(csv_file_path, 'r') as csvfile:
-        columnslist = csv.DictReader(csvfile, delimiter=mydelimiter)      
-        list_of_column_names = []
-        # loop to iterate through the rows of csv
-        for row in columnslist:
-            # adding the first row
-            list_of_column_names.append(row)
-            # breaking the loop after the
-            # first iteration itself
-            break            
-        list_of_column_names = list_of_column_names[0]        
-        list_of_column_names = list(list_of_column_names.keys())
+    # count the lines in the source file
+    NOL = sum(1 for _ in io.open(csv_file_path, "r"))
 
-    # the same csv gets overwritten
+    # print("NOL:", NOL)
 
-    with open(csv_file_path, 'w') as f:
-        # titles of the new csv that gets generated with the sorted data coming from the previous one        
-        writer = csv.DictWriter(f, fieldnames=list_of_column_names, delimiter=mydelimiter)  # my excel reads ; as column separator for CSVs
-        writer.writeheader()
-        for row in sortedlist:
-            writer.writerow(row)
+    # if NOL = 0 -> void file
+    # if NOL = 1 -> header-only file
 
-        # the csv gets overwritten, so there are changes on the host machine
+    if NOL > 1:
+
+        # just get the columns names, then close the file
+        with open(csv_file_path, 'r') as csvfile:
+            columnslist = csv.DictReader(csvfile, delimiter=mydelimiter)      
+            list_of_dictcolumns = []
+            # loop to iterate through the rows of csv
+            for row in columnslist:
+                # adding the first row
+                list_of_dictcolumns.append(row)
+                # breaking the loop after the
+                # first iteration itself
+                break  
+
+        # print("list_of_dictcolumns", list_of_dictcolumns)  
+
+        first_dictcolumn = list_of_dictcolumns[0]        
+        list_of_column_names = list(first_dictcolumn.keys())
+
+        # print("list_of_column_names", list_of_column_names)
+
+        # read the file
+        with open(csv_file_path, 'r') as csvfile:
+            spamreader = csv.DictReader(csvfile, delimiter=mydelimiter)
+
+            # print("columns_to_order_by", columns_to_order_by)
+
+            # check columns existence
+            column_existence = [ (column_name in list_of_column_names ) for column_name in columns_to_order_by ]
+
+            # print(column_existence)
+
+            if not all(column_existence):
+                raise ValueError("File {} does not contains all the columns given in input for sorting:\nFile columns names: {}\nInput columns names: {}".format(csv_file_path, list_of_column_names, columns_to_order_by))
+
+
+            items = tuple ( columns_to_order_by ) 
+            sortedlist = sorted(spamreader, key=operator.itemgetter(*items), reverse=False)
+
+
+        # the same csv gets overwritten
+
+        with open(csv_file_path, 'w') as f:
+            # titles of the new csv that gets generated with the sorted data coming from the previous one        
+            writer = csv.DictWriter(f, fieldnames=list_of_column_names, delimiter=mydelimiter)  # my excel reads ; as column separator for CSVs
+            writer.writeheader()
+            for row in sortedlist:
+                writer.writerow(row)
+                
         result['changed'] = True
+    
+    else:
+        result['changed'] = False
+
+
+    result['source_csv_number_of_raw_lines'] = NOL
+    result['source_csv_number_of_lines'] = NOL - 1
 
     module.exit_json(**result)
 
