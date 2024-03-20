@@ -1,6 +1,11 @@
 #!/usr/bin/python
 
-# vim ~/var/NTTDATA/4store/ansible-am/playbooks/count_enginedisconnected/library/ansible_custom_module__delete_rows_from_csv.py
+    # - name: delete rows from the csv where condition is true
+    #   ansible_custom_module__delete_rows_from_csv: 
+    #     path: "/tmp/pos_enginedisconnected_weekly_report_{{ '%Y-%m-%d' | strftime }}.csv"
+    #     python_condition: |
+    #      {{ " datetime.strptime(orario, '%H:%M:%S') < datetime.strptime('07:30:00', '%H:%M:%S') or datetime.strptime(orario, '%H:%M:%S') > datetime.strptime('22:00:00', '%H:%M:%S') " }}
+    #     columns_involved_in_condition: "{{ [ 'orario' ] }}"
 
 
 
