@@ -6,6 +6,13 @@ if it is decleared that the appending csv has header,
 it skips the first line, which is assumed to be the header.
 """
 
+    # - name: append the sorkaisse_ctrl2 CSVs to basefile
+    #   ansible_custom_module__append_multiple_csv: 
+    #     path_of_csv_to_be_updated: "{{ log_base_path }}/sor_ctrl2_all.csv"
+    #     directory_of_csvs_to_be_appended: "{{ log_base_path }}"
+    #     filename_common_pattern_of_csvs_to_be_appended: sor_ctrl2_pdv_*.csv
+    #     header: true
+
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
