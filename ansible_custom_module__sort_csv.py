@@ -1,5 +1,12 @@
 #!/usr/bin/python
 
+    # - name: sort the aggregated ticketregister 
+    #   ansible_custom_module__sort_csv: 
+    #     path: "{{ aggregated_ticketregister_path }}"
+    #     # columns_to_order_by: [dt, padded_idm, idc, idt]
+    #     columns_to_order_by: "{{ ['dt', 'padded_idm', 'idc', 'idt'] }}"
+    #     delimiter: ';'
+
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
