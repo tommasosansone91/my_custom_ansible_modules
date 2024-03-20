@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+# - name: re-order columns of the csv file
+#   ansible_custom_module__reorder_csv_columns:
+#     path: "{{ csv__cmpd_path }}"
+#     columns_ordered_list: "{{ [ 'module', 'id', 'fnc', 'id_prm', 'name', 'str_val', 'num_val', 'json_val', 'dtmod' ] }}"
+#     delimiter: ";"
+
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
