@@ -12,9 +12,11 @@ and place the custom modules inside it.
 
 Every module has at its top some comments indicating how to write the task that uses that module.
 
-### ansible_custom_module__delete_rows_from_csv.py
-has a bug and must be fixed. maybe is related to the delimiter
-
 ## Ansible documentation on custom modules
 
 https://docs.ansible.com/ansible/latest/dev_guide/developing_modules_general.html
+
+## Information on single modules
+
+#### ansible_custom_module__delete_rows_from_csv.py
+has a bug and must be fixed. maybe is related to the delimiter
