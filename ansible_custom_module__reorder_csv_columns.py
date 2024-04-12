@@ -183,9 +183,9 @@ def run_module():
     #     result['changed'] = False
 
     # replace the old csv with the new one
-    # -> Copy the content of source to destination
+    # -> Copy the content of destination to source csv
     shutil.copyfile(csv_output_file_path, csv_file_path)
-    # os.remove(csv_output_file_path) 
+    # os.remove(csv_output_file_path)  # commented to keep track of the fact that the source file could not be accessed in writing by the module because of permissions
 
 
     module.exit_json(**result)
