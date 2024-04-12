@@ -3,7 +3,7 @@
 # - name: re-order columns of the csv file
 #   ansible_custom_module__reorder_csv_columns:
 #     path: "{{ csv__cmpd_path }}"
-#     columns_ordered_list: "{{ [ 'module', 'id', 'fnc', 'id_prm', 'name', 'str_val', 'num_val', 'json_val', 'dtmod' ] }}"
+#     columns_ordered_list: "{{ [ 'id', 'name', 'surname' ] }}"
 #     delimiter: ";"
 
 from __future__ import (absolute_import, division, print_function)
@@ -71,10 +71,9 @@ def run_module():
 
     # display the columns titles in the tuple in the order you want them to be sorted.
     # items = (
-    #     'giorno',
-    #     'orario',
-    #     'idm',
-    #     'idc'
+    #     'id',
+    #     'name',
+    #     'surname'
     # )
 
     def file_existence_check(csv_file_path):
