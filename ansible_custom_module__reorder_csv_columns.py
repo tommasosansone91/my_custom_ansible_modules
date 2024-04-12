@@ -59,7 +59,7 @@ def run_module():
     csv_file_path = module.params['path']
 
     columns_ordered_list = module.params['columns_ordered_list'] 
-    # columns_ordered_list = ['idm', 'idc']
+    # columns_ordered_list = ['id', 'name', 'surname']
 
     mydelimiter =  module.params['delimiter'] 
 
