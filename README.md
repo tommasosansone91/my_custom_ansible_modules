@@ -8,9 +8,9 @@ In the same directory where is the playbook .yml file that uses that custom modu
 create a new directory called `library`,<br>
 and place the custom modules inside it.
 
-## How to write the task to call the custom modules
+## How to write the tasks
 
-Every module has at its top some comments indicating how to write the task that usaes that module.
+Every module has at its top some comments indicating how to write the task that uses that module.
 
 ### ansible_custom_module__delete_rows_from_csv.py
 has a bug and must be fixed. maybe is related to the delimiter
