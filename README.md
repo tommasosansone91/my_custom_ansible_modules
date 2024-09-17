@@ -10,6 +10,12 @@ inside the folder `playbooks`,<br>
 create a new directory called `custom_ansible_modules`,<br>
 and place the custom modules inside it.
 
+Then in your `ansible.cfg` file add the following snippet
+
+    [defaults]
+    library = /path/to/ansible_project/playbooks/common/ansible_custom_modules/
+
+
 ```
 playbooks
 ├── tool_1
