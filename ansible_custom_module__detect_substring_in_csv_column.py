@@ -1,21 +1,21 @@
 #!/usr/bin/python
 
-    # - name: Check if any mismatch in prezzo
-    #   ansible_custom_module__detect_substring_in_csv_column: 
-    #     csv_path: "{{ base_path }}/ctrl2_results__common_items_attributes_mismatch.csv"
-    #     delimiter: ";"
-    #     column_name: "confronto_prezzo"
-    #     substring: "f"
-    #   register: any_mismatch_in_prezzo_obj
-    #   # if this condition is met, the variable.substring_found is set to true = error
-
-
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 from ansible.module_utils.basic import AnsibleModule
 
+# task example
+#---------------
 
+    # - name: Check if any mismatch in f_cmp_status
+    #   ansible_custom_module__detect_substring_in_csv_column: 
+    #     csv_path: "{{ log_base_path }}/ctrl2_results__common_promo_attributes_mismatch.csv"
+    #     delimiter: ";"
+    #     column_name: "confronto_f_cmp_status_cassa"
+    #     substring: "f"
+    #   register: any_mismatch_in_f_cmp_status_obj
+    #   # if this condition is met, the variable.substring_found is set to true = error
 
 
 def run_module():
