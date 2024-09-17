@@ -1,12 +1,18 @@
 #!/usr/bin/python
 
-    # - name: replace dot by comma in money-amount columns of {{ rapporto_filename }}
+# task example
+#---------------
+
+    # - name: replace dot by comma in money-amount columns of {{ rapporto_finanziario_filename }}
+    #   ignore_errors: true  # in case there are no lines
     #   ansible_custom_module__replace_string_in_csv: 
-    #     path: "{{ log_base_path }}/{{ rapporto_filename }}"
+    #     path: "/path/to/file.csv"
     #     columns_to_process: "{{ [ 'ammontare' ] }}"
     #     string_to_be_replaced: "."
     #     string_to_replace_with: ","
     #     delimiter: ";"
+
+
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
