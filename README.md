@@ -4,9 +4,59 @@ All the modules work well, as long as it is not indicated differently in this fi
 
 ## Install
 
+### architecture n°1
+
+inside the folder `playbooks`,<br>
+create a new directory called `custom_ansible_modules`,<br>
+and place the custom modules inside it.
+
+```
+playbooks
+├── tool_1
+│   ├── templates
+│   │   └── ...
+│   ├── vars
+│   │   └── ...
+│   └── playbook_1.yml
+├── tool_2
+|   └── ...
+└── tool_3
+|   └── ...
+└── common
+    ├── vars
+    |   └── ...
+    ├── plays
+    |   └── ...
+    ├── ansible_custom_modules
+        ├── ansible_custom_module_1.py
+        └── ansible_custom_module_2.py
+```
+
+### architecture n°2 (not recommended)
+
 In the same directory where is the playbook .yml file that uses that custom module,<br>
 create a new directory called `library`,<br>
 and place the custom modules inside it.
+
+```
+playbooks
+├── tool_1
+│   ├── library
+│   │   ├── ansible_custom_module_1.py
+│   │   └── ansible_custom_module_2.py
+│   ├── templates
+│   │   └── ...
+│   ├── vars
+│   │   └── ...
+│   └── playbook_1.yml
+├── tool_2
+│   ├── library
+│   │   ├── ansible_custom_module_1.py
+│   │   ├── ansible_custom_module_2.py
+│   │   └── ansible_custom_module_3.py
+└── tool_3
+    └── ...
+```
 
 ## How to write the tasks
 
